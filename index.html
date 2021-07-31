@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" type="image/jpg" href="https://www.freepnglogos.com/uploads/twitter-logo-png/twitter-logo-vector-png-clipart-1.png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Quotes</title>
+</head>
+<body>
+    <div class="container" id='container'>
+        <div class="box">
+            <div  id="tweet"class="tweet" onclick="quotesTweet()">
+                <img id='tweetImg' src="https://www.freepnglogos.com/uploads/twitter-logo-png/twitter-logo-vector-png-clipart-1.png" alt="">
+            </div>
+            <div class="quotes">
+                <p class="text" id="text"> </p>
+                <p class="author" id='author'></p>
+            </div>
+            <div class="button" onclick="nextQuote()">
+                <div>Next Quote</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        let container = document.getElementById('container');
+
+        let tweet = document.getElementById('tweet');
+        let text  = document.getElementById('text')
+        let author  = document.getElementById('author')
+        let tweetImg = document.getElementById('tweetImg');
+        tweet.addEventListener('mouseleave',()=>{
+            tweetImg.classList.add('rev');
+        });
+
+
+        let jsonData ='';
+        let index = 0;
+
+        let quotesTweet = ()=>{
+            let tweetIntent = `https://twitter.com/intent/tweet?text=${jsonData[index].text}  ${jsonData[index].author}`
+
+            window.open(tweetIntent)
+        }
+
+        let getRandomQuotes = ()=>{
+            index = Math.round(Math.random() * 1643);
+            console.log(index);
+            text.innerText = jsonData[index].text;
+            jsonData[index].author ? 
+            author.innerText = jsonData[index].author :
+            author.innerText = "unknown"
+        }
+
+        let getQuotesData = async ()=>{
+            let api = "https://type.fit/api/quotes"
+            let data = await fetch(api);
+            jsonData = await data.json();
+            container.classList.add('active');
+
+            getRandomQuotes();
+        }
+        getQuotesData();
+
+
+        let nextQuote=()=>{
+            getRandomQuotes();
+        }
+    </script>
+</body>
+</html>
